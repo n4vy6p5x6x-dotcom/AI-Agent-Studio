@@ -1,0 +1,30 @@
+{
+  "name": "@ai-studio/database",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "generate": "prisma generate",
+    "push": "prisma db push",
+    "seed": "tsx prisma/seed.ts",
+    "ingest": "tsx src/ingest-industry-docs.ts",
+    "content:generate": "tsx scripts/generate-doc-content.ts",
+    "studio": "prisma studio",
+    "build": "tsc",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.1.0",
+    "@ai-studio/utils": "workspace:*"
+  },
+  "devDependencies": {
+    "prisma": "^6.1.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "rimraf": "^6.0.1",
+    "bcryptjs": "^2.4.3",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^22.10.2"
+  }
+}

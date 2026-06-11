@@ -1,0 +1,39 @@
+services:
+  postgres:
+    image: ${POSTGRES_IMAGE:-docker.m.daocloud.io/library/postgres:16-alpine}
+    container_name: ai-studio-postgres
+    restart: unless-stopped
+    ports:
+      - "${BIND_ADDRESS:-127.0.0.1}:${POSTGRES_PORT:-5432}:5432"
+    environment:
+      POSTGRES_USER: aistudio
+      POSTGRES_PASSWORD: aistudio123
+      POSTGRES_DB: ai_agent_studio
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aistudio -d ai_agent_studio"]
+      interval: 3s
+      timeout: 5s
+      retries: 15
+      start_period: 15s
+
+  redis:
+    image: ${REDIS_IMAGE:-docker.m.daocloud.io/library/redis:7-alpine}
+    container_name: ai-studio-redis
+    restart: unless-stopped
+    # 不映射到主机，仅 Docker 内网使用，不占用本机端口
+    expose:
+      - "6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 3s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+
+volumes:
+  postgres_data:
+  redis_data:

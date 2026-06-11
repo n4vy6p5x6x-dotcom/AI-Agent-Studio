@@ -1,0 +1,28 @@
+{
+  "name": "ai-agent-studio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "工业级 AI 多智能体协同平台 - 本地版",
+  "scripts": {
+    "dev": "pnpm --parallel --filter @ai-studio/web --filter @ai-studio/api dev",
+    "dev:web": "pnpm --filter @ai-studio/web dev",
+    "dev:api": "pnpm --filter @ai-studio/api dev",
+    "build": "pnpm run -r build",
+    "db:generate": "dotenv -e .env -- pnpm --filter @ai-studio/database generate",
+    "db:push": "dotenv -e .env -- pnpm --filter @ai-studio/database push",
+    "db:seed": "dotenv -e .env -- pnpm --filter @ai-studio/database seed",
+    "db:ingest": "dotenv -e .env -- pnpm --filter @ai-studio/database ingest",
+    "content:generate": "pnpm --filter @ai-studio/database content:generate",
+    "db:studio": "dotenv -e .env -- pnpm --filter @ai-studio/database studio",
+    "lint": "pnpm run -r lint",
+    "clean": "pnpm run -r clean"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "devDependencies": {
+    "dotenv-cli": "^8.0.0"
+  },
+  "packageManager": "pnpm@9.15.0"
+}

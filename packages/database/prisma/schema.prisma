@@ -1,0 +1,328 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      UserRole @default(USER)
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  agents         Agent[]
+  workflows      Workflow[]
+  knowledgeBases KnowledgeBase[]
+  conversations  Conversation[]
+  tasks          Task[]
+
+  @@map("users")
+}
+
+enum UserRole {
+  ADMIN
+  USER
+  OPERATOR
+}
+
+model Agent {
+  id          String      @id @default(cuid())
+  name        String
+  description String?
+  avatar      String?
+  systemPrompt String     @db.Text
+  model       String      @default("deepseek-chat")
+  temperature Float       @default(0.7)
+  maxTokens   Int         @default(4096)
+  tools       Json        @default("[]")
+  status      AgentStatus @default(IDLE)
+  category    AgentCategory @default(CUSTOM)
+  isTemplate  Boolean     @default(false)
+  userId      String
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workflowId  String?
+  workflow    Workflow?   @relation(fields: [workflowId], references: [id])
+  knowledgeBaseId String?
+  knowledgeBase   KnowledgeBase? @relation(fields: [knowledgeBaseId], references: [id], onDelete: SetNull)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  tasks       Task[]
+  logs        Log[]
+  toolCalls   ToolCall[]
+
+  @@map("agents")
+}
+
+enum AgentStatus {
+  IDLE
+  THINKING
+  EXECUTING
+  WAITING
+  ERROR
+  OFFLINE
+}
+
+enum AgentCategory {
+  PLANNER
+  DATA_ANALYST
+  SCHEDULER
+  DISPATCHER
+  QUALITY
+  SIMULATOR
+  DECISION
+  CUSTOM
+}
+
+model Workflow {
+  id          String         @id @default(cuid())
+  name        String
+  description String?
+  nodes       Json           @default("[]")
+  edges       Json           @default("[]")
+  status      WorkflowStatus @default(DRAFT)
+  version     Int            @default(1)
+  userId      String
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  agents      Agent[]
+  tasks       Task[]
+
+  @@map("workflows")
+}
+
+enum WorkflowStatus {
+  DRAFT
+  ACTIVE
+  PAUSED
+  ARCHIVED
+}
+
+model KnowledgeBase {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  embeddingModel String @default("local-embedding")
+  chunkSize   Int      @default(512)
+  chunkOverlap Int     @default(50)
+  industry    String?
+  scenarioType ScenarioType?
+  isSystem    Boolean  @default(false)
+  linkedAgentCategories String[] @default([])
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  documents   Document[]
+  agents      Agent[]
+
+  @@map("knowledge_bases")
+}
+
+model Document {
+  id              String         @id @default(cuid())
+  name            String
+  type            DocumentType
+  size            Int
+  path            String
+  status          DocumentStatus @default(PENDING)
+  chunkCount      Int            @default(0)
+  industry        String?
+  category        String?
+  tags            String[]       @default([])
+  scenarioType    ScenarioType?
+  summary         String?        @db.Text
+  source          String?
+  organizedBy     String?
+  knowledgeBaseId String
+  knowledgeBase   KnowledgeBase  @relation(fields: [knowledgeBaseId], references: [id], onDelete: Cascade)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  chunks          DocumentChunk[]
+
+  @@index([knowledgeBaseId, industry])
+  @@index([knowledgeBaseId, scenarioType])
+  @@map("documents")
+}
+
+enum DocumentType {
+  PDF
+  DOCX
+  EXCEL
+  TXT
+  MD
+}
+
+enum DocumentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+model DocumentChunk {
+  id         String   @id @default(cuid())
+  content    String   @db.Text
+  embedding  Float[]
+  metadata   Json     @default("{}")
+  documentId String
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@map("document_chunks")
+}
+
+model Conversation {
+  id        String   @id @default(cuid())
+  title     String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  agentIds  String[] @default([])
+  metadata  Json     @default("{}")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  messages  Message[]
+
+  @@map("conversations")
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  role           MessageRole
+  content        String       @db.Text
+  tokens         Int          @default(0)
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now())
+
+  @@map("messages")
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
+  TOOL
+}
+
+model Task {
+  id          String     @id @default(cuid())
+  title       String
+  description String?    @db.Text
+  status      TaskStatus @default(PENDING)
+  priority    Int        @default(0)
+  result      Json?
+  userId      String
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  agentId     String?
+  agent       Agent?     @relation(fields: [agentId], references: [id])
+  workflowId  String?
+  workflow    Workflow?  @relation(fields: [workflowId], references: [id])
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  logs        Log[]
+
+  @@map("tasks")
+}
+
+enum TaskStatus {
+  PENDING
+  ASSIGNED
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+model Log {
+  id        String   @id @default(cuid())
+  level     LogLevel @default(INFO)
+  message   String   @db.Text
+  metadata  Json     @default("{}")
+  agentId   String?
+  agent     Agent?   @relation(fields: [agentId], references: [id])
+  taskId    String?
+  task      Task?    @relation(fields: [taskId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@map("logs")
+}
+
+enum LogLevel {
+  DEBUG
+  INFO
+  WARN
+  ERROR
+}
+
+model ToolCall {
+  id        String         @id @default(cuid())
+  toolName  String
+  input     Json
+  output    Json?
+  status    ToolCallStatus @default(PENDING)
+  duration  Int?
+  agentId   String
+  agent     Agent          @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  createdAt DateTime       @default(now())
+
+  @@map("tool_calls")
+}
+
+enum ToolCallStatus {
+  PENDING
+  RUNNING
+  SUCCESS
+  FAILED
+}
+
+model IndustrialScenario {
+  id          String         @id @default(cuid())
+  name        String
+  type        ScenarioType
+  description String?        @db.Text
+  config      Json           @default("{}")
+  data        Json           @default("{}")
+  status      ScenarioStatus @default(ACTIVE)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@map("industrial_scenarios")
+}
+
+enum ScenarioType {
+  UAV_MANUFACTURING
+  SMT_MANUFACTURING
+  EV_MANUFACTURING
+}
+
+enum ScenarioStatus {
+  ACTIVE
+  PAUSED
+  ARCHIVED
+}
+
+model ApiMetric {
+  id        String   @id @default(cuid())
+  endpoint  String
+  method    String
+  status    Int
+  duration  Int
+  tokens    Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@map("api_metrics")
+}
