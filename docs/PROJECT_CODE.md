@@ -324,17 +324,18 @@ export class DeepSeekClient {
 
 ### 8.2 `@ai-studio/workflows` — 工作流引擎
 
-**WorkflowEngine**：LangGraph 风格，按 React Flow 节点图顺序执行。
+**WorkflowEngine**：LangGraph 风格，支持 **parallel（并行网关）** 与 **merge（合并网关）**。
 
-支持节点类型：
+支持节点类型：`start` · `end` · `agent` · `rag` · `parallel` · `merge` · `http` · `condition` · `tool`
 
-| 类型 | 行为 |
-|------|------|
-| `start` | 入口，注入初始 context |
-| `agent` | 调用 DeepSeekClient |
-| `rag` | 调用知识库检索注入 context |
-| `condition` | 条件分支 |
-| `end` | 结束 |
+**预置 4 条工作流**（`packages/database/src/workflow-templates.ts`）：
+
+| ID | 名称 |
+|----|------|
+| demo-workflow-001 | 无人机协同生产计划 |
+| demo-workflow-002 | SMT 智能排程与换线优化 |
+| demo-workflow-003 | 新能源质量追溯闭环 |
+| demo-workflow-004 | 多 Agent 全局协同决策 |
 
 ```typescript
 async execute(workflow, input, onStep?, options?) {
@@ -396,7 +397,7 @@ async execute(workflow, input, onStep?, options?) {
 
 - **UserRole**: ADMIN, USER, OPERATOR
 - **AgentStatus**: IDLE, THINKING, EXECUTING, WAITING, ERROR, OFFLINE
-- **AgentCategory**: PLANNER, DATA_ANALYST, SCHEDULER, DISPATCHER, QUALITY, SIMULATOR, DECISION, CUSTOM
+- **AgentCategory**: PLANNER, DATA_ANALYST, SCHEDULER, DISPATCHER, DESIGNER, QUALITY, SIMULATOR, DECISION, CUSTOM
 - **ScenarioType**: UAV_MANUFACTURING, SMT_MANUFACTURING, EV_MANUFACTURING
 
 ### 9.3 种子数据 `prisma/seed.ts`
@@ -405,7 +406,7 @@ async execute(workflow, input, onStep?, options?) {
 |------|------|
 | 用户 | admin + operator（密码 admin123） |
 | Agent 模板 | 8 种工业角色（计划员、数据员、排程员、调度员、设计师、质量员、仿真员、协同决策员） |
-| 工作流 | demo-workflow-001（含 RAG + Agent 节点） |
+| 工作流 | 4 条演示工作流（含并行网关、条件分支、多 Agent） |
 | 知识库 | industry-kb-main，80 篇行业文档入库 |
 | 场景 | UAV / SMT / EV 三个工业场景 |
 | 任务 | 3 条示例任务 |

@@ -50,7 +50,10 @@ ai-agent-studio/
 
 ### 2. 工作流引擎
 - **WorkflowEngine**: LangGraph 风格的有向图执行引擎
-- 支持节点类型: start, end, agent, rag, http, condition, tool
+- 支持节点类型: start, end, agent, rag, **parallel**, **merge**, http, condition, tool
+- **并行网关** 同时执行多路 Agent 分支，**合并网关** 汇总后继续下游
+- 条件分支支持多标签路由（通过/否、受控/失控、有冲突/无冲突）
+- 预置 4 条工业演示工作流（`workflow-templates.ts`）
 - 实时步骤回调 + 日志记录
 
 ### 3. RAG 引擎

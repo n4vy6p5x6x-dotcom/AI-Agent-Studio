@@ -203,7 +203,7 @@ Seed 完成后会创建：
 | 管理员 | `admin@aistudio.local` / `admin123` |
 | 操作员 | `operator@aistudio.local` / `admin123` |
 | Agent 模板 | 8 个工业 Agent |
-| 示例工作流 | 无人机生产计划工作流 |
+| 示例工作流 | 4 条（无人机/SMT/新能源/多Agent协同） |
 | 知识库 | 工业制造知识库 + 示例文档 |
 | 工业场景 | 无人机 / SMT / 新能源汽车 |
 

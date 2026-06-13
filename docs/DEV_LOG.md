@@ -293,9 +293,8 @@ Workflow N──1 Agent (optional binding)
 |------|------|-----------|
 | 用户 | 2 | admin, operator |
 | Agent 模板 | 8 | template-planner 等（含 AI 设计师） |
-| 工作流 | 1 | demo-workflow-001 |
-| 知识库 | 1 | demo-kb-001 |
-| 文档 | 1 | demo-doc-001 |
+| 工作流 | 4 | demo-workflow-001 ~ 004（并行网关/条件分支） |
+| 知识库 | 1 | industry-kb-main（80 篇行业文档） |
 | 工业场景 | 3 | scenario-uav/smt/ev-001 |
 | 任务 | 3 | 示例任务 |
 
