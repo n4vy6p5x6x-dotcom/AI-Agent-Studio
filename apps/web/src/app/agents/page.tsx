@@ -76,7 +76,11 @@ export default function AgentsPage() {
               <option value="PLANNER">计划员</option>
               <option value="DATA_ANALYST">数据员</option>
               <option value="SCHEDULER">排程员</option>
+              <option value="DISPATCHER">调度员</option>
+              <option value="DESIGNER">设计师</option>
               <option value="QUALITY">质量员</option>
+              <option value="SIMULATOR">仿真员</option>
+              <option value="DECISION">协同决策员</option>
             </select>
             <select
               value={form.model}

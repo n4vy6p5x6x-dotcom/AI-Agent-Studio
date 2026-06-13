@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
+import { INDUSTRIAL_AGENT_TEMPLATES } from '../src/agent-templates';
 import { ingestIndustryDocuments, INDUSTRY_KB_ID } from '../src/ingest-industry-docs';
 
 const prisma = new PrismaClient();
@@ -31,62 +32,17 @@ async function main() {
     },
   });
 
-  const templateAgents = [
-    {
-      name: 'AI 计划员',
-      description: '负责 MPS/MRP 生产计划制定与优化',
-      systemPrompt: '你是一位资深的生产计划专家，精通 MPS（主生产计划）和 MRP（物料需求计划）。你的职责是分析订单需求、产能约束和库存状况，制定最优生产计划。',
-      category: 'PLANNER' as const,
-      tools: ['mps_calculator', 'mrp_engine', 'capacity_analysis'],
-    },
-    {
-      name: 'AI 数据员',
-      description: '负责工业数据采集、分析与可视化',
-      systemPrompt: '你是一位工业数据分析专家，擅长处理制造数据、生成分析报告和数据洞察。你可以连接各类数据源，执行 SQL 查询，生成图表和 KPI 报告。',
-      category: 'DATA_ANALYST' as const,
-      tools: ['sql_query', 'chart_generator', 'kpi_calculator'],
-    },
-    {
-      name: 'AI 排程员',
-      description: '负责 SMT 产线排程与换线优化',
-      systemPrompt: '你是一位 SMT 排程专家，精通贴片产线调度、换线优化和甘特图排程。你需要考虑设备产能、换线时间和订单优先级，生成最优排程方案。',
-      category: 'SCHEDULER' as const,
-      tools: ['smt_scheduler', 'gantt_generator', 'changeover_optimizer'],
-    },
-    {
-      name: 'AI 调度员',
-      description: '负责多 Agent 任务分配与资源调度',
-      systemPrompt: '你是一位智能调度专家，使用合同网协议（Contract Net Protocol）进行任务分配。你需要评估各 Agent 的能力和资源状态，将任务分配给最合适的 Agent。',
-      category: 'DISPATCHER' as const,
-      tools: ['task_allocator', 'resource_monitor', 'contract_net'],
-    },
-    {
-      name: 'AI 质量员',
-      description: '负责质量追溯与缺陷分析',
-      systemPrompt: '你是一位质量管理专家，精通质量追溯、SPC 统计过程控制和缺陷根因分析。你可以追踪产品从原材料到成品的全流程质量数据。',
-      category: 'QUALITY' as const,
-      tools: ['traceability', 'spc_analysis', 'defect_analyzer'],
-    },
-    {
-      name: 'AI 仿真员',
-      description: '负责工业场景仿真与数字孪生',
-      systemPrompt: '你是一位工业仿真专家，可以构建和运行制造场景的数字孪生模型，进行 What-If 分析和产能仿真。',
-      category: 'SIMULATOR' as const,
-      tools: ['digital_twin', 'what_if_analysis', 'capacity_simulation'],
-    },
-    {
-      name: '协同决策员',
-      description: '负责多 Agent 协同决策与方案整合',
-      systemPrompt: '你是一位协同决策专家，负责整合多个 Agent 的分析结果，进行冲突消解和方案优化，输出最终决策建议。',
-      category: 'DECISION' as const,
-      tools: ['conflict_resolver', 'decision_matrix', 'consensus_builder'],
-    },
-  ];
-
-  for (const agent of templateAgents) {
+  for (const agent of INDUSTRIAL_AGENT_TEMPLATES) {
     await prisma.agent.upsert({
       where: { id: `template-${agent.category.toLowerCase()}` },
-      update: {},
+      update: {
+        name: agent.name,
+        description: agent.description,
+        systemPrompt: agent.systemPrompt,
+        category: agent.category,
+        tools: agent.tools,
+        isTemplate: true,
+      },
       create: {
         id: `template-${agent.category.toLowerCase()}`,
         name: agent.name,
@@ -220,7 +176,7 @@ async function main() {
   console.log('✅ Seed completed!');
   console.log(`   Admin: admin@aistudio.local / admin123`);
   console.log(`   Operator: operator@aistudio.local / admin123`);
-  console.log(`   Agents: ${templateAgents.length} templates`);
+  console.log(`   Agents: ${INDUSTRIAL_AGENT_TEMPLATES.length} templates`);
   console.log(`   Workflow: ${workflow.name}`);
   console.log(`   Knowledge Base: ${kb?.name || INDUSTRY_KB_ID} (${ingestResult.documentCount} docs)`);
   console.log(`   Scenarios: ${scenarios.length}`);

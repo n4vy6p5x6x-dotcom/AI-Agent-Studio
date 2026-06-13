@@ -6,7 +6,7 @@
 
 ## 功能特性
 
-- **AI Agent Studio** — 创建、编辑、管理 AI Agent，支持 7 种工业 Agent 模板
+- **AI Agent Studio** — 创建、编辑、管理 AI Agent，支持 **8 种**工业 Agent 模板
 - **多 Agent 协同** — 合同网协议（Contract Net Protocol）自动任务分配
 - **Workflow 工作流** — React Flow 可视化拖拽编排，支持实时调试
 - **RAG 企业知识库** — PDF/DOCX/Excel 文档上传、切片、向量检索

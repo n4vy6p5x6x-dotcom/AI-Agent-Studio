@@ -41,7 +41,7 @@
 |------|------|
 | 单机可运行 | 一台 Windows/Mac 电脑 + Docker |
 | 工业级目录 | Monorepo + 分层 packages |
-| 可演示 | 7 种 Agent 模板 + 3 工业场景 |
+| 可演示 | 8 种 Agent 模板 + 3 工业场景 |
 | 可开发 | Cursor 友好，TypeScript 严格模式 |
 | 可扩展 | 预留 SaaS 升级路径 |
 
@@ -88,7 +88,7 @@
 | 任务 | 状态 | 实现位置 |
 |------|------|----------|
 | Agent CRUD API | ✅ | `apps/api/src/agents/` |
-| 7 种工业 Agent 模板 | ✅ | `seed.ts` |
+| 8 种工业 Agent 模板 | ✅ | `seed.ts` + `agent-templates.ts` |
 | Agent 对话 Chat API | ✅ | `apps/api/src/chat/` |
 | DeepSeekClient | ✅ | `packages/agents/src/index.ts` |
 | 合同网协议 CNP | ✅ | `packages/agents/src/index.ts` |
@@ -292,7 +292,7 @@ Workflow N──1 Agent (optional binding)
 | 数据 | 数量 | ID / 标识 |
 |------|------|-----------|
 | 用户 | 2 | admin, operator |
-| Agent 模板 | 7 | template-planner 等 |
+| Agent 模板 | 8 | template-planner 等（含 AI 设计师） |
 | 工作流 | 1 | demo-workflow-001 |
 | 知识库 | 1 | demo-kb-001 |
 | 文档 | 1 | demo-doc-001 |

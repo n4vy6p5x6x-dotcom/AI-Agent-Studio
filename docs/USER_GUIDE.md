@@ -164,19 +164,21 @@
 ### 5.1 Agent 是什么？
 
 Agent 是具备 **System Prompt、模型、工具、职责类别** 的 AI 智能体。  
-本系统预置 7 种 **工业 Agent 模板**，也支持用户 **自定义 Agent**。
+本系统由 **8 个 AI 智能体** 与 **三层技术架构**（前端展示层 / NestJS 服务层 / 数据与 AI 引擎层）构成。  
+预置 **8 种工业 Agent 模板**，也支持用户 **自定义 Agent**。
 
 ### 5.2 预置 Agent 模板
 
-| Agent 名称 | 类别 | 职责 | 典型工具 |
-|------------|------|------|----------|
-| AI 计划员 | PLANNER | MPS/MRP 生产计划 | mps_calculator, mrp_engine |
-| AI 数据员 | DATA_ANALYST | 工业数据分析 | sql_query, chart_generator |
-| AI 排程员 | SCHEDULER | SMT 产线排程 | smt_scheduler, gantt_generator |
-| AI 调度员 | DISPATCHER | 多 Agent 任务分配 | contract_net, task_allocator |
-| AI 质量员 | QUALITY | 质量追溯分析 | traceability, spc_analysis |
-| AI 仿真员 | SIMULATOR | 工业场景仿真 | digital_twin, capacity_simulation |
-| 协同决策员 | DECISION | 多 Agent 协同决策 | conflict_resolver, consensus_builder |
+| Agent 名称 | 类别 | 职责定位 |
+|------------|------|----------|
+| AI 计划员 | PLANNER | 编制 MPS 与粗产能分析，支持 FCFS/SPT/EDD/CR 四种排程规则切换对比 |
+| AI 数据员 | DATA_ANALYST | BOM 展开与 MRP 计算，自动生成采购计划 |
+| AI 排程员 | SCHEDULER | 有限产能排程与甘特图生成 |
+| AI 调度员 | DISPATCHER | 动态任务分配及异常事件响应（急单插入、设备故障等情境模拟） |
+| AI 设计师 | DESIGNER | 工厂布局与物流优化，支持产品/工艺原则两种布置方式 |
+| AI 质量员 | QUALITY | SPC 控制图生成与质量追溯，支持 Xbar-R/p/np/c/u 六种控制图分析 |
+| AI 仿真员 | SIMULATOR | 产线建模仿真与瓶颈分析，计算产线平衡率 |
+| 协同决策员 | DECISION | 全局方案协调，通过合同网协议消解资源冲突 |
 
 > 模板 Agent 不可删除，可复制配置创建自定义 Agent。
 

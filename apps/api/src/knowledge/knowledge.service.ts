@@ -361,19 +361,14 @@ export class KnowledgeService {
 
 
     const agentRoles = [
-
       { category: 'PLANNER', name: 'AI 计划员', industries: ['UAV', 'EV'] },
-
+      { category: 'DATA_ANALYST', name: 'AI 数据员', industries: ['UAV', 'SMT', 'EV', 'PLATFORM'] },
       { category: 'SCHEDULER', name: 'AI 排程员', industries: ['SMT', 'UAV'] },
-
+      { category: 'DISPATCHER', name: 'AI 调度员', industries: ['UAV', 'SMT', 'EV', 'PLATFORM'] },
+      { category: 'DESIGNER', name: 'AI 设计师', industries: ['UAV', 'EV'] },
       { category: 'QUALITY', name: 'AI 质量员', industries: ['UAV', 'SMT', 'EV'] },
-
-      { category: 'DATA_ANALYST', name: 'AI 数据员', industries: ['PLATFORM'] },
-
-      { category: 'DISPATCHER', name: 'AI 调度员', industries: ['PLATFORM'] },
-
+      { category: 'SIMULATOR', name: 'AI 仿真员', industries: ['UAV', 'SMT', 'EV'] },
       { category: 'DECISION', name: '协同决策员', industries: ['PLATFORM', 'EV'] },
-
     ];
 
 

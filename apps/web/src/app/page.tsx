@@ -23,7 +23,7 @@ export default function HomePage() {
       api.getRecentLogs(20),
     ]).then(([m, a, l]) => {
       setMetrics(m);
-      setAgents(a.slice(0, 6) as Array<Record<string, unknown>>);
+      setAgents(a.slice(0, 8) as Array<Record<string, unknown>>);
       setLogs(l as typeof logs);
     }).catch(console.error);
   }, []);

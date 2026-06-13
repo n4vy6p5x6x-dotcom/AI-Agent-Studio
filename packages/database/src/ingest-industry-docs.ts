@@ -151,7 +151,7 @@ export async function ingestIndustryDocuments(options: {
       description: `AI Agent Studio 内置行业 RAG 知识库，含 ${INDUSTRY_DOCUMENTS.length} 份无人机/SMT/新能源汽车/多智能体文档，与工业场景和 Agent 模板关联。`,
       industry: 'INDUSTRIAL',
       isSystem: true,
-      linkedAgentCategories: ['PLANNER', 'DATA_ANALYST', 'SCHEDULER', 'DISPATCHER', 'QUALITY', 'SIMULATOR', 'DECISION'],
+      linkedAgentCategories: ['PLANNER', 'DATA_ANALYST', 'SCHEDULER', 'DISPATCHER', 'DESIGNER', 'QUALITY', 'SIMULATOR', 'DECISION'],
     },
     create: {
       id: INDUSTRY_KB_ID,
@@ -159,7 +159,7 @@ export async function ingestIndustryDocuments(options: {
       description: `AI Agent Studio 内置行业 RAG 知识库，含 ${INDUSTRY_DOCUMENTS.length} 份无人机/SMT/新能源汽车/多智能体文档，与工业场景和 Agent 模板关联。`,
       industry: 'INDUSTRIAL',
       isSystem: true,
-      linkedAgentCategories: ['PLANNER', 'DATA_ANALYST', 'SCHEDULER', 'DISPATCHER', 'QUALITY', 'SIMULATOR', 'DECISION'],
+      linkedAgentCategories: ['PLANNER', 'DATA_ANALYST', 'SCHEDULER', 'DISPATCHER', 'DESIGNER', 'QUALITY', 'SIMULATOR', 'DECISION'],
       userId: options.userId,
       chunkSize,
       chunkOverlap,

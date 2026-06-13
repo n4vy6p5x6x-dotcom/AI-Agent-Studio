@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Bot, Brain, Wrench } from 'lucide-react';
+import { Bot, Brain, LayoutGrid, Wrench } from 'lucide-react';
 import { GlassCard } from './glass-card';
 import { StatusBadge } from './status-badge';
 import { cn } from '@/lib/utils';
@@ -11,6 +11,7 @@ const categoryIcons: Record<string, typeof Bot> = {
   DATA_ANALYST: Bot,
   SCHEDULER: Bot,
   DISPATCHER: Bot,
+  DESIGNER: LayoutGrid,
   QUALITY: Bot,
   SIMULATOR: Bot,
   DECISION: Brain,
@@ -22,6 +23,7 @@ const categoryColors: Record<string, string> = {
   DATA_ANALYST: 'from-purple-500 to-pink-500',
   SCHEDULER: 'from-orange-500 to-yellow-500',
   DISPATCHER: 'from-green-500 to-emerald-500',
+  DESIGNER: 'from-teal-500 to-cyan-500',
   QUALITY: 'from-red-500 to-rose-500',
   SIMULATOR: 'from-indigo-500 to-violet-500',
   DECISION: 'from-cyan-500 to-blue-500',

@@ -58,6 +58,7 @@ export type AgentCategory =
   | 'DATA_ANALYST'
   | 'SCHEDULER'
   | 'DISPATCHER'
+  | 'DESIGNER'
   | 'QUALITY'
   | 'SIMULATOR'
   | 'DECISION'

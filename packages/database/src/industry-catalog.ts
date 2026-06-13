@@ -28,7 +28,7 @@ const UAV_TOPICS: Array<{ title: string; category: string; tags: string[]; agent
   { title: '无人机产线产能规划与瓶颈分析', category: '生产计划', tags: ['产能', '瓶颈', 'OEE'], agents: ['PLANNER', 'DATA_ANALYST'] },
   { title: '外协结构件来料检验规范', category: '质量检验', tags: ['外协', 'IQC', '结构件'], agents: ['QUALITY'] },
   { title: '工装夹具设计与寿命管理', category: '设备管理', tags: ['工装', '夹具', 'PM'], agents: ['SCHEDULER'] },
-  { title: '无人机精益生产线布局指南', category: '精益生产', tags: ['精益', '线体', '布局'], agents: ['PLANNER', 'SIMULATOR'] },
+  { title: '无人机精益生产线布局指南', category: '精益生产', tags: ['精益', '线体', '布局'], agents: ['DESIGNER', 'PLANNER', 'SIMULATOR'] },
   { title: '多机型混线换线时间优化方法', category: '排程优化', tags: ['换线', 'SMED', '混线'], agents: ['SCHEDULER', 'PLANNER'] },
   { title: '无人机全流程质量追溯体系', category: '质量管理', tags: ['追溯', 'SN', '批次'], agents: ['QUALITY', 'DATA_ANALYST'] },
   { title: '飞控系统 FMEA 风险分析报告模板', category: '质量管理', tags: ['FMEA', '飞控', '风险'], agents: ['QUALITY', 'DECISION'] },
@@ -39,7 +39,7 @@ const UAV_TOPICS: Array<{ title: string; category: string; tags: string[]; agent
   { title: 'GNSS 模块校准与环境干扰排查', category: '测试工艺', tags: ['GPS', 'GNSS', '校准'], agents: ['QUALITY', 'DATA_ANALYST'] },
   { title: '图传系统联调与干扰测试规范', category: '测试工艺', tags: ['图传', 'RF', '联调'], agents: ['QUALITY'] },
   { title: '无人机零部件 WMS 仓储对接规范', category: '物流仓储', tags: ['WMS', '仓储', '拣配'], agents: ['DATA_ANALYST', 'PLANNER'] },
-  { title: '产线 AGV 配送路径与节拍匹配', category: '物流仓储', tags: ['AGV', '配送', '节拍'], agents: ['SCHEDULER', 'DISPATCHER'] },
+  { title: '产线 AGV 配送路径与节拍匹配', category: '物流仓储', tags: ['AGV', '配送', '节拍'], agents: ['DESIGNER', 'SCHEDULER', 'DISPATCHER'] },
   { title: '无人机生产看板 KPI 指标体系', category: '数据分析', tags: ['KPI', '看板', 'OEE'], agents: ['DATA_ANALYST'] },
   { title: '售后返修分析与设计反馈闭环', category: '质量管理', tags: ['返修', 'RMA', '闭环'], agents: ['QUALITY', 'DECISION'] },
 ];
@@ -96,7 +96,7 @@ const EV_TOPICS: Array<{ title: string; category: string; tags: string[]; agents
   { title: '零部件 APQP 与 PPAP 提交指南', category: '质量管理', tags: ['APQP', 'PPAP', '零部件'], agents: ['QUALITY', 'PLANNER'] },
   { title: '八年质保数据追溯与索赔分析', category: '质量管理', tags: ['质保', '索赔', '追溯'], agents: ['QUALITY', 'DATA_ANALYST'] },
   { title: '退役电芯梯次利用评估标准', category: '可持续', tags: ['梯次', '回收', '评估'], agents: ['PLANNER', 'DECISION'] },
-  { title: '总装产线节拍优化与工位平衡', category: '排程优化', tags: ['节拍', '工位', '平衡'], agents: ['SCHEDULER', 'PLANNER'] },
+  { title: '总装产线节拍优化与工位平衡', category: '排程优化', tags: ['节拍', '工位', '平衡'], agents: ['DESIGNER', 'SCHEDULER', 'PLANNER'] },
   { title: '新能源汽车多 Agent 协同决策案例', category: '多智能体', tags: ['Agent', '协同', '决策'], agents: ['DECISION', 'DISPATCHER', 'PLANNER'] },
 ];
 
