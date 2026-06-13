@@ -12,7 +12,17 @@ import { GlassCard } from '@/components/ui/glass-card';
 import { Play, Save, Plus } from 'lucide-react';
 import { api } from '@/lib/api';
 
-const nodeTypes = ['start', 'end', 'agent', 'http', 'condition', 'rag', 'tool'] as const;
+const nodeTypes = ['start', 'end', 'agent', 'http', 'condition', 'rag', 'tool', 'parallel', 'merge'] as const;
+
+const nodeLabels: Record<string, string> = {
+  agent: 'AI Agent',
+  rag: 'RAG 检索',
+  condition: '条件判断',
+  http: 'HTTP 请求',
+  tool: 'Tool 调用',
+  parallel: '并行网关',
+  merge: '合并网关',
+};
 
 const defaultNodes: Node[] = [
   { id: 'start', type: 'input', position: { x: 100, y: 200 }, data: { label: '开始' }, style: { background: '#00d4ff20', border: '1px solid #00d4ff', borderRadius: 8, color: '#fff', padding: 10 } },
@@ -82,8 +92,14 @@ export default function WorkflowsPage() {
       {
         id,
         position: { x: 250 + Math.random() * 200, y: 100 + Math.random() * 200 },
-        data: { label: type === 'agent' ? 'AI Agent' : type === 'rag' ? 'RAG 检索' : type === 'condition' ? '条件判断' : type === 'http' ? 'HTTP 请求' : 'Tool 调用' },
-        style: { background: '#ffffff10', border: '1px solid #ffffff30', borderRadius: 8, color: '#fff', padding: 10 },
+        data: { label: nodeLabels[type] || type },
+        style: {
+          background: type === 'parallel' ? '#06b6d420' : type === 'merge' ? '#06b6d420' : '#ffffff10',
+          border: type === 'parallel' ? '2px solid #06b6d4' : type === 'merge' ? '2px dashed #06b6d4' : '1px solid #ffffff30',
+          borderRadius: 8,
+          color: '#fff',
+          padding: 10,
+        },
       },
     ]);
   };

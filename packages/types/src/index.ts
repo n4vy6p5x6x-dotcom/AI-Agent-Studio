@@ -104,7 +104,7 @@ export type WorkflowStatus = 'DRAFT' | 'ACTIVE' | 'PAUSED' | 'ARCHIVED';
 
 export interface WorkflowNode {
   id: string;
-  type: 'start' | 'end' | 'agent' | 'http' | 'condition' | 'rag' | 'tool';
+  type: 'start' | 'end' | 'agent' | 'http' | 'condition' | 'rag' | 'tool' | 'parallel' | 'merge';
   position: { x: number; y: number };
   data: Record<string, unknown>;
 }

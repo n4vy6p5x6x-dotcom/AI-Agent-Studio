@@ -41,10 +41,38 @@ export class WorkflowEngine {
 
     while (currentNodeId) {
       if (visited.has(currentNodeId)) break;
-      visited.add(currentNodeId);
 
       const node = workflow.nodes.find((n) => n.id === currentNodeId);
       if (!node) break;
+
+      if (node.type === 'parallel') {
+        visited.add(currentNodeId);
+        const forkStep = await this.executeNode(node, context, options);
+        steps.push(forkStep);
+        onStep?.(forkStep);
+
+        const outEdges = workflow.edges.filter((e) => e.source === node.id);
+        for (const edge of outEdges) {
+          const branchNode = workflow.nodes.find((n) => n.id === edge.target);
+          if (!branchNode || branchNode.type === 'merge') continue;
+          if (visited.has(branchNode.id)) continue;
+          visited.add(branchNode.id);
+          const branchStep = await this.executeNode(branchNode, context, options);
+          steps.push(branchStep);
+          onStep?.(branchStep);
+          if (branchStep.status === 'failed') {
+            return { executionId, status: 'failed', steps, output: context };
+          }
+          if (branchStep.output) {
+            context = { ...context, ...branchStep.output };
+          }
+        }
+
+        currentNodeId = this.findMergeAfterParallel(node.id, workflow);
+        continue;
+      }
+
+      visited.add(currentNodeId);
 
       const step = await this.executeNode(node, context, options);
       steps.push(step);
@@ -139,6 +167,20 @@ export class WorkflowEngine {
           return this.completeStep(node, { conditionResult: result }, logs, startTime);
         }
 
+        case 'parallel': {
+          const label = (node.data.label as string) || '并行网关';
+          logs.push(`并行网关启动: ${label}`);
+          await sleep(150);
+          return this.completeStep(node, { parallelGateway: label }, logs, startTime);
+        }
+
+        case 'merge': {
+          const label = (node.data.label as string) || '合并网关';
+          logs.push(`合并网关: ${label}`);
+          await sleep(100);
+          return this.completeStep(node, { mergeGateway: label }, logs, startTime);
+        }
+
         case 'tool': {
           const toolName = (node.data.toolName as string) || 'unknown';
           logs.push(`调用 Tool: ${toolName}`);
@@ -188,11 +230,28 @@ export class WorkflowEngine {
     if (outEdges.length === 1) return outEdges[0].target;
 
     if (context.conditionResult === false) {
-      const falseEdge = outEdges.find((e) => e.label === 'false' || e.label === '否');
+      const falseEdge = outEdges.find((e) =>
+        ['false', '否', '失控', '有冲突'].includes((e.label as string) || ''),
+      );
       return falseEdge?.target || outEdges[1]?.target || null;
     }
 
-    return outEdges[0].target;
+    const trueEdge = outEdges.find((e) =>
+      ['true', '是', '通过', '受控', '无冲突'].includes((e.label as string) || ''),
+    );
+    return trueEdge?.target || outEdges[0].target;
+  }
+
+  private findMergeAfterParallel(parallelId: string, workflow: WorkflowDefinition): string | null {
+    const branchIds = workflow.edges.filter((e) => e.source === parallelId).map((e) => e.target);
+    for (const branchId of branchIds) {
+      const out = workflow.edges.find((e) => e.source === branchId);
+      if (out) {
+        const target = workflow.nodes.find((n) => n.id === out.target);
+        if (target?.type === 'merge') return out.target;
+      }
+    }
+    return this.getNextNode(parallelId, workflow.edges, {});
   }
 }
 

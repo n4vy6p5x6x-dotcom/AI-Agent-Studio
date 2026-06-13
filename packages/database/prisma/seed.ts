@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
 import { INDUSTRIAL_AGENT_TEMPLATES } from '../src/agent-templates';
 import { ingestIndustryDocuments, INDUSTRY_KB_ID } from '../src/ingest-industry-docs';
+import { DEMO_WORKFLOWS } from '../src/workflow-templates';
 
 const prisma = new PrismaClient();
 
@@ -57,47 +58,25 @@ async function main() {
     });
   }
 
-  const workflow = await prisma.workflow.upsert({
-    where: { id: 'demo-workflow-001' },
-    update: {},
-    create: {
-      id: 'demo-workflow-001',
-      name: '无人机生产计划工作流',
-      description: '从订单接收到 MPS/MRP 计划生成的完整工作流',
-      status: 'ACTIVE',
-      userId: admin.id,
-      nodes: [
-        { id: 'start', type: 'start', position: { x: 100, y: 200 }, data: { label: '开始' } },
-        { id: 'rag-1', type: 'rag', position: { x: 300, y: 200 }, data: { label: '行业知识库检索', knowledgeBaseId: INDUSTRY_KB_ID, query: '无人机 MPS 生产计划' } },
-        { id: 'agent-1', type: 'agent', position: { x: 500, y: 200 }, data: { label: 'AI 计划员', agentId: 'template-planner' } },
-        { id: 'agent-2', type: 'agent', position: { x: 700, y: 200 }, data: { label: 'AI 数据员', agentId: 'template-data_analyst' } },
-        { id: 'condition-1', type: 'condition', position: { x: 900, y: 200 }, data: { label: '计划审核', condition: 'approved' } },
-        { id: 'end', type: 'end', position: { x: 1100, y: 200 }, data: { label: '结束' } },
-      ],
-      edges: [
-        { id: 'e1', source: 'start', target: 'rag-1' },
-        { id: 'e2', source: 'rag-1', target: 'agent-1' },
-        { id: 'e3', source: 'agent-1', target: 'agent-2' },
-        { id: 'e4', source: 'agent-2', target: 'condition-1' },
-        { id: 'e5', source: 'condition-1', target: 'end' },
-      ],
-    },
-  });
-
-  // 更新工作流 RAG 节点关联行业知识库
-  const wf = await prisma.workflow.findUnique({ where: { id: 'demo-workflow-001' } });
-  if (wf) {
-    const nodes = wf.nodes as Array<Record<string, unknown>>;
-    const updatedNodes = nodes.map((n) => {
-      const node = n as { id: string; data?: Record<string, unknown> };
-      if (node.id === 'rag-1') {
-        return { ...node, data: { ...node.data, knowledgeBaseId: INDUSTRY_KB_ID, label: '行业知识库检索' } };
-      }
-      return node;
-    });
-    await prisma.workflow.update({
-      where: { id: 'demo-workflow-001' },
-      data: { nodes: updatedNodes as never },
+  for (const wf of DEMO_WORKFLOWS) {
+    await prisma.workflow.upsert({
+      where: { id: wf.id },
+      update: {
+        name: wf.name,
+        description: wf.description,
+        status: wf.status,
+        nodes: wf.nodes as never,
+        edges: wf.edges as never,
+      },
+      create: {
+        id: wf.id,
+        name: wf.name,
+        description: wf.description,
+        status: wf.status,
+        userId: admin.id,
+        nodes: wf.nodes as never,
+        edges: wf.edges as never,
+      },
     });
   }
 
@@ -177,7 +156,7 @@ async function main() {
   console.log(`   Admin: admin@aistudio.local / admin123`);
   console.log(`   Operator: operator@aistudio.local / admin123`);
   console.log(`   Agents: ${INDUSTRIAL_AGENT_TEMPLATES.length} templates`);
-  console.log(`   Workflow: ${workflow.name}`);
+  console.log(`   Workflows: ${DEMO_WORKFLOWS.length} 条（含并行网关/条件分支）`);
   console.log(`   Knowledge Base: ${kb?.name || INDUSTRY_KB_ID} (${ingestResult.documentCount} docs)`);
   console.log(`   Scenarios: ${scenarios.length}`);
 }
